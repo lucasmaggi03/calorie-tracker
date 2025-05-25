@@ -1,44 +1,58 @@
 import { useState, type Dispatch } from "react";
+import { v4 as uuidv4 } from "uuid";
 import type { Activity } from "../types/";
 import { categories } from "../data/categories";
 import type { ActiivtyActions } from "../reducers/activity-reducer";
 
 type FormProps = {
-  dispatch: Dispatch<ActiivtyActions>
-}
+  dispatch: Dispatch<ActiivtyActions>;
+};
 
-export default function Form({dispatch} : FormProps) {
-  const [activity, setActivity] = useState<Activity>({
-    name: "",
-    calories: 0,
-    category: "",
-  });
+const initialState: Activity = {
+  id: uuidv4(),
+  name: "",
+  calories: 0,
+  category: 1,
+};
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-    const isNumberField = ['category', 'calories'].includes(e.target.id) // detecta si el campo que se modifica es o no un number
+export default function Form({ dispatch }: FormProps) {
+  const [activity, setActivity] = useState<Activity>(initialState);
 
-    console.log(isNumberField)
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const isNumberField = ["category", "calories"].includes(e.target.id); // detecta si el campo que se modifica es o no un number
+
+    console.log(isNumberField);
 
     setActivity({
       ...activity,
-      [e.target.id]: isNumberField? +e.target.value : e.target.value
-    })
+      [e.target.id]: isNumberField ? +e.target.value : e.target.value,
+    });
     console.log(e.target.value);
   };
 
-  const isValidActivity = () =>{
-    const { name, calories } = activity
-    return name.trim() !== '' && calories > 0
-  }
+  const isValidActivity = () => {
+    const { name, calories } = activity;
+    return name.trim() !== "" && calories > 0;
+  };
 
-  const handleSubmit = (e : React.FormEvent<HTMLFormElement>) =>{
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    dispatch({type: 'save-activity', payload: {newActivity: activity}})
-  }
+    dispatch({ type: "save-activity", payload: { newActivity: activity } });
+    setActivity({
+      ...initialState, id: uuidv4()
+    });
+  };
 
   return (
-    <form className="space-y-5 bg-white shadow p-10 rounded-lg" onSubmit={handleSubmit}>
+    <form
+      className="space-y-5 bg-white shadow p-10 rounded-lg"
+      onSubmit={handleSubmit}
+    >
       <div className="grid grid-cols-1 gap-3">
         <label htmlFor="category" className="font-bold">
           Categoría:{" "}

@@ -3,9 +3,9 @@ export type Category = {
   name: string;
 };
 
-export type Activity = { 
-    name: string; 
-    calories: number;
-    category: string 
+export type Activity = {
+  id: string;
+  name: string;
+  calories: number;
+  category: number;
 };
-
