@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, type Dispatch } from "react";
 import type { Activity } from "../types/";
 import { categories } from "../data/categories";
+import type { ActiivtyActions } from "../reducers/activity-reducer";
 
-export default function Form() {
+type FormProps = {
+  dispatch: Dispatch<ActiivtyActions>
+}
+
+export default function Form({dispatch} : FormProps) {
   const [activity, setActivity] = useState<Activity>({
     name: "",
     calories: 0,
@@ -27,7 +32,9 @@ export default function Form() {
   }
 
   const handleSubmit = (e : React.FormEvent<HTMLFormElement>) =>{
+    e.preventDefault()
 
+    dispatch({type: 'save-activity', payload: {newActivity: activity}})
   }
 
   return (
