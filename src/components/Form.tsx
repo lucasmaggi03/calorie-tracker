@@ -1,11 +1,12 @@
-import { useState, type Dispatch } from "react";
+import { useState,useEffect , type Dispatch } from "react";
 import { v4 as uuidv4 } from "uuid";
 import type { Activity } from "../types/";
 import { categories } from "../data/categories";
-import type { ActiivtyActions } from "../reducers/activity-reducer";
+import type { ActivtyActions, ActivityState } from "../reducers/activity-reducer";
 
 type FormProps = {
-  dispatch: Dispatch<ActiivtyActions>;
+  dispatch: Dispatch<ActivtyActions>,
+  state: ActivityState
 };
 
 const initialState: Activity = {
@@ -15,8 +16,15 @@ const initialState: Activity = {
   category: 1,
 };
 
-export default function Form({ dispatch }: FormProps) {
+export default function Form({ dispatch, state }: FormProps) {
   const [activity, setActivity] = useState<Activity>(initialState);
+
+  useEffect(() => {
+    if(state.activeId){
+      const selectActivity = state.activities.filter(stateActivity => stateActivity.id === state.activeId)[0]
+      setActivity(selectActivity);
+    }
+  } ,[state.activeId])
 
   const handleChange = (
     e:
